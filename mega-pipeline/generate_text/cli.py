@@ -42,9 +42,8 @@ def generate():
     # Model - Load pretrained GPT Language Model
     model = TFGPT2LMHeadModel.from_pretrained("gpt2", pad_token_id=tokenizer.eos_token_id)
 
-    if not os.path.exists(text_paragraphs):
-        os.mkdir(text_paragraphs)
-    for filename in os.listdir(text_prompts):
+    # try to demo with 10 files
+    for filename in os.listdir(text_prompts)[:10]:
         with open(os.path.join(text_prompts,filename), "rb") as in_file:
             # Input text
             input_text = in_file.read().decode('utf-8')
@@ -53,7 +52,8 @@ def generate():
             input_ids = tokenizer.encode(input_text, return_tensors='tf')
 
             # max_length is the maximum length of the whole text, including input words and generated ones.
-            outputs = model.generate(input_ids, max_length=50,num_return_sequences=1)
+            outputs = model.generate(input_ids, max_length=100,num_return_sequences=1)
+            output_text = tokenizer.decode(outputs[0], skip_special_tokens = True)
 
         with open(os.path.join(text_paragraphs, filename), "wb") as out_file:
             out_file.write(outputs.text.encode())
