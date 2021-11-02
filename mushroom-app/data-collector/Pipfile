@@ -10,6 +10,8 @@ selenium = "*"
 user-agent = "*"
 requests = "*"
 databases = "*"
+google-auth = "*"
+google-cloud-storage = "*"
 
 [requires]
 python_version = "3.7"

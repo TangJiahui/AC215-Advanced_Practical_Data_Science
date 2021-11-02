@@ -11,6 +11,11 @@ export BASE_DIR=$(pwd)
 export PERSISTENT_DIR=$(pwd)/../persistent-folder/
 export SECRETS_DIR=$(pwd)/../secrets/
 
+export GCP_PROJECT="ac215-project"
+export GCP_ZONE="us-central1-a"
+export GOOGLE_APPLICATION_CREDENTIALS=/secrets/bucket-reader.json
+
+
 # Build the image based on the Dockerfile
 docker build -t $IMAGE_NAME -f Dockerfile .
 
@@ -19,4 +24,8 @@ docker build -t $IMAGE_NAME -f Dockerfile .
 docker run --rm --name $IMAGE_NAME -ti \
 --mount type=bind,source="$BASE_DIR",target=/app \
 --mount type=bind,source="$PERSISTENT_DIR",target=/persistent \
---mount type=bind,source="$SECRETS_DIR",target=/secrets $IMAGE_NAME
+--mount type=bind,source="$SECRETS_DIR",target=/secrets \
+-e GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS \
+-e GCP_PROJECT=$GCP_PROJECT \
+-e GCP_ZONE=$GCP_ZONE \
+$IMAGE_NAME
