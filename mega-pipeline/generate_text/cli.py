@@ -26,8 +26,12 @@ def download():
     blobs = bucket.list_blobs(prefix=f'{text_prompts}/')
     if not os.path.exists(text_prompts):
         os.mkdir(text_prompts)
+    i=10
     for blob in blobs:
+        if i<0:
+            break
         print(blob.name)
+        i-=1
         if not blob.name.endswith("/"):
             blob.download_to_filename(blob.name)
 
@@ -42,21 +46,28 @@ def generate():
     # Model - Load pretrained GPT Language Model
     model = TFGPT2LMHeadModel.from_pretrained("gpt2", pad_token_id=tokenizer.eos_token_id)
 
-    # try to demo with 10 files
-    for filename in os.listdir(text_prompts)[:10]:
+    for filename in os.listdir(text_prompts):
+        # print(filename)
         with open(os.path.join(text_prompts,filename), "rb") as in_file:
             # Input text
+            # print(in_file.read())
+            if filename[0]=='.':
+                continue
+
+            if os.path.getsize(os.path.join(text_prompts,filename))==0:
+                continue
+
             input_text = in_file.read().decode('utf-8')
 
             # Tokenize Input
             input_ids = tokenizer.encode(input_text, return_tensors='tf')
 
             # max_length is the maximum length of the whole text, including input words and generated ones.
-            outputs = model.generate(input_ids, max_length=100,num_return_sequences=1)
-            output_text = tokenizer.decode(outputs[0], skip_special_tokens = True)
+            outputs = model.generate(input_ids, max_length=50, num_return_sequences=1)
+            output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
         with open(os.path.join(text_paragraphs, filename), "wb") as out_file:
-            out_file.write(outputs.text.encode())
+            out_file.write(output_text.encode())
     print("generate finished")
 
 
