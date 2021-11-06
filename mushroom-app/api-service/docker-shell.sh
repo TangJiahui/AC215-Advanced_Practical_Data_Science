@@ -17,7 +17,8 @@ export GOOGLE_APPLICATION_CREDENTIALS=/secrets/bucket-reader.json
 
 
 # Build the image based on the Dockerfile
-docker build -t $IMAGE_NAME -f Dockerfile .
+#docker build -t $IMAGE_NAME -f Dockerfile .
+docker buildx build -t $IMAGE_NAME --platform linux/amd64 -f Dockerfile .
 
 # Run the container
 # --mount: Attach a filesystem mount to the container

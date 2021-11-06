@@ -11,6 +11,9 @@ fastapi = "*"
 google-auth = "*"
 google-cloud-storage = "*"
 pandas = "*"
+tensorflow-hub = "*"
+python-multipart = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.8"
